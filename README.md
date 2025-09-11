@@ -11,3 +11,12 @@ Summary Generation: Create concise and accurate summaries of lengthy comments.
 Word Cloud: Visually highlight the most frequently used keywords in stakeholder feedback.
 
 ⚡ The solution will significantly reduce the manual effort required to review a large volume of comments. It will help ensure that all remarks are systematically analyzed, prevent important observations from being overlooked, and provide stakeholders’ feedback in a clear, organized, and actionable manner.
+
+
+## ⚙️ Installation
+
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/Sih-Geck/Comment-Analysis
+2. cd e-consultanation
+3.npm install
