@@ -1,0 +1,189 @@
+import React, { useState } from "react";
+import { Link, NavLink } from "react-router-dom";
+import Asset from "../assets/emblem.png";
+
+// SVG Icons for the UI
+const UserIcon = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+    <path
+      fillRule="evenodd"
+      d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"
+      clipRule="evenodd"
+    />
+  </svg>
+);
+
+const SearchIcon = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+  </svg>
+);
+
+const EmblemIcon = () => (
+  <svg
+    className="h-16 w-16 text-gray-700"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="1"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+  >
+    <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path>
+    <line x1="12" y1="22" x2="12" y2="17"></line>
+    <polyline points="17 8 12 11 7 8"></polyline>
+    <polyline points="17 13 12 16 7 13"></polyline>
+  </svg>
+);
+
+const Navbar = () => {
+  const [isOpen, setIsOpen] = useState(false);
+
+  const navLinks = [
+    { name: "Home", path: "/" },
+    { name: "Stakeholder Dashboard", path: "/dashboard" },
+    { name: "Admin Dashboard", path: "/admin" },
+  ];
+
+  return (
+    <header className="bg-white shadow-md sticky top-0 z-50">
+      {/* Top Bar */}
+      <div className="bg-blue-950  text-white">
+        <div className="container mx-auto px-4 py-1.5 flex justify-between items-center text-xs">
+          <span> eConsultation Portal</span>
+          <div className="hidden sm:flex items-center gap-4">
+            <div className="flex items-center gap-2">
+              <span>Font Size</span>
+              <button className="h-5 w-5 bg-gray-700 rounded-sm flex items-center justify-center text-white">-</button>
+              <button className="h-5 w-5 bg-gray-700 rounded-sm flex items-center justify-center text-white">A</button>
+              <button className="h-5 w-5 bg-gray-700 rounded-sm flex items-center justify-center text-white">+</button>
+            </div>
+            <div className="h-4 w-px bg-gray-500"></div>
+            <a href="#" className="flex items-center gap-1.5 hover:underline">
+              <UserIcon />
+              <span>Sign In / Sign Up</span>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      {/* Main Header */}
+      <div className="bg-white py-4 px-4">
+        <div className="container mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
+          <Link to="/" className="flex items-center gap-3">
+             <img src={Asset} alt="Emblem" className="h-12 w-auto mr-4" />
+            <div>
+              <h1 className="text-xl font-bold text-gray-800 tracking-wide">
+                MINISTRY OF CORPORATE AFFAIRS
+              </h1>
+              <p className="text-sm text-brand-blue-800 font-semibold">
+                GOVERNMENT OF INDIA
+              </p>
+            </div>
+          </Link>
+
+          <div className="flex flex-col items-center md:items-start text-center md:text-left">
+            <p className="text-sm font-semibold text-gray-600">
+              EMPOWERING BUSINESS, PROTECTING INVESTORS
+            </p>
+            <div>
+              <span className="text-sm font-bold text-orange-500">REGULATOR</span>
+              <span className="text-gray-400 mx-1">•</span>
+              <span className="text-sm font-bold text-green-500">INTEGRATOR</span>
+              <span className="text-gray-400 mx-1">•</span>
+              <span className="text-sm font-bold text-red-500">FACILITATOR</span>
+              <span className="text-gray-400 mx-1">•</span>
+              <span className="text-sm font-bold text-blue-500">EDUCATOR</span>
+            </div>
+          </div>
+
+          <div className="relative w-full md:w-auto">
+            <input
+              type="search"
+              placeholder="Search"
+              className="bg-gray-100 rounded-full py-2 pl-4 pr-10 w-full md:w-64 border-2 border-transparent focus:border-brand-blue-500 focus:outline-none transition"
+            />
+            <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+              <SearchIcon />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Bottom Navigation */}
+      <nav className="bg-blue-950">
+        <div className="container mx-auto px-4 flex justify-between items-center h-12">
+          <div className="hidden md:flex items-center h-full">
+            {navLinks.map((link) => (
+              <NavLink
+                key={link.name}
+                to={link.path}
+                className={({ isActive }) =>
+                  `text-white h-full flex items-center px-4 text-sm font-medium transition-colors hover:bg-brand-blue-800 ${
+                    isActive ? "bg-brand-blue-800" : ""
+                  }`
+                }
+              >
+                {link.name}
+              </NavLink>
+            ))}
+          </div>
+
+          {/* Mobile Menu Button */}
+          <div className="flex md:hidden">
+            <button
+              onClick={() => setIsOpen(!isOpen)}
+              type="button"
+              className="inline-flex items-center justify-center p-2 rounded-md text-gray-300 hover:text-white hover:bg-brand-blue-800 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white"
+            >
+              <svg
+                className="block h-6 w-6"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d={
+                    !isOpen
+                      ? "M4 6h16M4 12h16M4 18h16"
+                      : "M6 18L18 6M6 6l12 12"
+                  }
+                />
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        {/* Mobile Menu */}
+        {isOpen && (
+          <div className="md:hidden" id="mobile-menu">
+            <div className="px-2 pt-2 pb-3 space-y-1">
+              {navLinks.map((link) => (
+                <NavLink
+                  key={link.name}
+                  to={link.path}
+                  onClick={() => setIsOpen(false)}
+                  className={({ isActive }) =>
+                    `block px-3 py-2 rounded-md text-base font-medium ${
+                      isActive
+                        ? "bg-brand-blue-800 text-white"
+                        : "text-gray-300 hover:bg-brand-blue-700 hover:text-white"
+                    }`
+                  }
+                >
+                  {link.name}
+                </NavLink>
+              ))}
+            </div>
+          </div>
+        )}
+      </nav>
+    </header>
+  );
+};
+
+export default Navbar;
