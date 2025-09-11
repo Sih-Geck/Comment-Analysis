@@ -1,12 +1,13 @@
-# React + Vite
+## 📌 **Sentiment Analysis of Comments Received Through E-Consultation Module**
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This project focuses on using AI-powered techniques to analyze stakeholder comments submitted through the e-Consultation module on the MCA21 portal.
 
-Currently, two official plugins are available:
+👉 The core objectives are:
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+Sentiment Analysis: Classify comments as positive, negative, or neutral.
 
-## Expanding the ESLint configuration
+Summary Generation: Create concise and accurate summaries of lengthy comments.
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+Word Cloud: Visually highlight the most frequently used keywords in stakeholder feedback.
+
+⚡ The solution will significantly reduce the manual effort required to review a large volume of comments. It will help ensure that all remarks are systematically analyzed, prevent important observations from being overlooked, and provide stakeholders’ feedback in a clear, organized, and actionable manner.
