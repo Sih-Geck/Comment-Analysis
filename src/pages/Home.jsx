@@ -1,4 +1,5 @@
 import React from "react";
+import BannerImg from "../assets/banner.jpeg";
 
 const Home = () => {
   return (
@@ -6,12 +7,11 @@ const Home = () => {
       {/* Hero Banner */}
       <section className="relative">
         <img
-          src="/banner.jpg"
+          src={BannerImg}
           alt="Banner"
-          className="w-full h-[400px] object-cover"
+          className="w-full h-[500px] object-cover"
         />
-        <div className="absolute inset-0 flex items-center justify-center bg-black/40 text-white text-3xl font-bold">
-          Internship Opportunities - ₹5000 Monthly + ₹6000 Grant
+        <div className="absolute inset-0 flex items-center justify-center bg-black/20 text-white text-3xl font-bold">
         </div>
       </section>
 
