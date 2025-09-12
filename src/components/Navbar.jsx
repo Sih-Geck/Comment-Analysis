@@ -59,10 +59,12 @@ const Navbar = () => {
               <button className="h-5 w-5 bg-gray-700 rounded-sm flex items-center justify-center text-white">+</button>
             </div>
             <div className="h-4 w-px bg-gray-500"></div>
-            <a href="#" className="flex items-center gap-1.5 hover:underline">
+
+            {/* Updated Link for Sign In / Sign Up */}
+            <Link to="/login" className="flex items-center gap-1.5 hover:underline">
               <UserIcon />
               <span>Sign In / Sign Up</span>
-            </a>
+            </Link>
           </div>
         </div>
       </div>
@@ -71,7 +73,7 @@ const Navbar = () => {
       <div className="bg-white py-4 px-4">
         <div className="container mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
           <Link to="/" className="flex items-center gap-3">
-             <img src={Asset} alt="Emblem" className="h-12 w-auto mr-4" />
+            <img src={Asset} alt="Emblem" className="h-12 w-auto mr-4" />
             <div>
               <h1 className="text-xl font-bold text-gray-800 tracking-wide">
                 MINISTRY OF CORPORATE AFFAIRS
