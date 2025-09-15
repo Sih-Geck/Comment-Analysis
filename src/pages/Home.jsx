@@ -11,7 +11,7 @@ const Home = () => {
           alt="Banner"
           className="w-full h-[500px] object-cover"
         />
-        <div className="absolute inset-0 flex items-center justify-center bg-black/20 text-white text-3xl font-bold">
+        <div className="absolute inset-0 flex items-center justify-center text-white text-3xl font-bold">
         </div>
       </section>
 

@@ -1,8 +1,83 @@
+import { useNavigate } from "react-router-dom";
+import Image from "../assets/Sequrity.png"; // image
+
 export default function Signup() {
+  const navigate = useNavigate();
+
+  const handleSignup = (e) => {
+    e.preventDefault();
+    console.log("Signup clicked");
+    // Signup logic yaha likh sakte ho (API call etc.)
+    navigate("/login"); // Signup ke baad login page par redirect
+  };
+
   return (
-    <div className="p-6">
-      <h1 className="text-2xl font-bold">Signup Page</h1>
-      <p>Yaha signup form aayega</p>
+    <div className="min-h-screen flex items-center justify-center bg-gray-50">
+      <div className="flex w-10/12 max-w-6xl shadow-lg rounded-lg overflow-hidden bg-white">
+        
+        {/* Left Section (Banner) */}
+        <div className="w-1/2 bg-blue-900 flex items-center justify-center">
+          <img src={Image} alt="Signup Banner" className="object-cover w-full h-full" />
+        </div>
+
+        {/* Right Section (Form) */}
+        <div className="w-1/2 p-10">
+          <h2 className="text-2xl font-bold text-gray-800 mb-6">
+            Create Your Account
+          </h2>
+
+          <form onSubmit={handleSignup} className="space-y-4">
+            <input
+              type="text"
+              placeholder="Company Name"
+              className="w-full px-3 py-2 border border-gray-300 rounded"
+              required
+            />
+
+            <input
+              type="text"
+              placeholder="CIN number"
+              className="w-full px-3 py-2 border border-gray-300 rounded"
+              required
+            />
+
+            <input
+              type="email"
+              placeholder="Email"
+              className="w-full px-3 py-2 border border-gray-300 rounded"
+              required
+            />
+            <input
+              type="password"
+              placeholder="Password"
+              className="w-full px-3 py-2 border border-gray-300 rounded"
+              required
+            />
+            <input
+              type="password"
+              placeholder="Confirm Password"
+              className="w-full px-3 py-2 border border-gray-300 rounded"
+              required
+            />
+
+            {/* Buttons */}
+            <button
+              type="submit"
+              className="w-full bg-green-600 text-white py-2 rounded hover:bg-green-700"
+            >
+              Sign Up
+            </button>
+
+            <button
+              type="button"
+              onClick={() => navigate("/login")}
+              className="w-full border border-blue-600 text-blue-600 py-2 rounded hover:bg-blue-700 hover:text-white"
+            >
+              Back to Login
+            </button>
+          </form>
+        </div>
+      </div>
     </div>
   );
 }
