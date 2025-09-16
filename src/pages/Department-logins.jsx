@@ -14,7 +14,8 @@ export default function DepartmentLogin() {
 
     if (username === DEPT_USERNAME && password === DEPT_PASSWORD) {
       // ✅ new tab me open karega
-      window.open("/department-dashboard", "_blank");
+      window.open(`${window.location.origin}/department-dashboard`, "_blank");
+
     } else {
       setError("Invalid Department Credentials");
     }

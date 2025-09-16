@@ -4,5 +4,5 @@ import tailwindcss from "@tailwindcss/vite";
 
 export default defineConfig({
   plugins: [react(), tailwindcss()],
-  base: "/Comment-Analysis/", // GitHub repo name (case-sensitive)
+  base: "/Comment-Analysis/", // ✅ repo name (GitHub Pages ke liye zaroori)
 });

@@ -12,7 +12,7 @@ import DeptHome from "./Department/DeptHome";
 import ManageUsers from "./Department/ManageUsers";
 import Consultations from "./Department/Consultations";
 import Reports from "./Department/Reports";
-import DeptConsultationDetails from "./Department/DeptConsultationDetails"; // ✅ NEW FILE
+import DeptConsultationDetails from "./Department/DeptConsultationDetails";
 
 // Context
 import { ConsultationProvider } from "./context/ConsultationContext";
@@ -31,15 +31,15 @@ function App() {
             <Route path="department-logins" element={<DepartmentLogin />} />
           </Route>
 
-          {/* ✅ Department Dashboard with nested routes */}
+          {/* ✅ Department Dashboard */}
           <Route path="/department-dashboard" element={<DepartmentDashboard />}>
             <Route index element={<DeptHome />} />
             <Route path="users" element={<ManageUsers />} />
             <Route path="consultations" element={<Consultations />} />
             <Route
-              path="/department-dashboard/consultation/:id"
+              path="consultation/:id"
               element={<DeptConsultationDetails />}
-            /> {/* ✅ NEW ROUTE */}
+            />
             <Route path="reports" element={<Reports />} />
           </Route>
         </Routes>
