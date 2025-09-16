@@ -20,24 +20,42 @@ export default function ConsultationForm() {
     });
   };
 
+  // Remove selected file
+  const removeFile = () => {
+    setFormData({
+      ...formData,
+      file: null,
+    });
+
+    // input ko reset karna (file input clear)
+    const input = document.getElementById("file-upload");
+    if (input) input.value = "";
+  };
+
   // Handle form submit
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    const today = new Date().toISOString().split("T")[0];
+    const status = formData.deadline >= today ? "open" : "closed";
+
+    const fileUrl = formData.file ? URL.createObjectURL(formData.file) : null;
 
     const newConsult = {
       title: formData.title,
       description: formData.description,
       deadline: formData.deadline,
       postedBy: "Department",
-      status: "Open",
-      file: formData.file ? formData.file.name : "No File",
+      status,
+      file: formData.file ? { name: formData.file.name, url: fileUrl } : null,
     };
 
-    // ✅ Context me save
     addConsultation(newConsult);
 
-    // Reset form
+    // Reset form (file भी clear होगा)
     setFormData({ title: "", description: "", deadline: "", file: null });
+    const input = document.getElementById("file-upload");
+    if (input) input.value = "";
   };
 
   return (
@@ -86,14 +104,59 @@ export default function ConsultationForm() {
           />
         </div>
 
+        {/* 🚀 Improved File Upload Section */}
         <div>
-          <label className="block font-semibold">Attach File</label>
-          <input
-            type="file"
-            name="file"
-            onChange={handleChange}
-            className="w-full"
-          />
+          <label className="block font-semibold mb-2">
+            Attach File (PDF only)
+          </label>
+
+          <label
+            htmlFor="file-upload"
+            className="flex flex-col items-center justify-center w-50 h-20 border-2 border-dashed border-gray-300 rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100 transition"
+          >
+            <svg
+              className="w-8 h-8 text-gray-500 mb-2"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M7 16V4m0 0L3 8m4-4l4 4m6 8v-6m0 0l-4 4m4-4l4 4"
+              />
+            </svg>
+            <p className="text-sm text-gray-600">
+              <span className="font-medium">Click to upload</span> or drag &
+              drop
+            </p>
+            <p className="text-xs text-gray-400">Only PDF files are allowed</p>
+            <input
+              id="file-upload"
+              type="file"
+              name="file"
+              accept="application/pdf"
+              onChange={handleChange}
+              className="hidden"
+            />
+          </label>
+
+          {/* Show selected file + Remove option */}
+          {formData.file && (
+            <div className="mt-2 flex items-center justify-between bg-gray-100 p-2 rounded">
+              <p className="text-sm text-green-600 font-medium">
+                Selected: {formData.file.name}
+              </p>
+              <button
+                type="button"
+                onClick={removeFile}
+                className="ml-4 text-red-500 hover:text-red-700 text-sm font-semibold"
+              >
+                ❌ Remove
+              </button>
+            </div>
+          )}
         </div>
 
         <button
@@ -126,8 +189,27 @@ export default function ConsultationForm() {
                   <td className="p-2 border">{c.id}</td>
                   <td className="p-2 border">{c.title}</td>
                   <td className="p-2 border">{c.deadline}</td>
-                  <td className="p-2 border">{c.file || "No File"}</td>
-                  <td className="p-2 border">{c.status}</td>
+                  <td className="p-2 border">
+                    {c.file ? (
+                      <a
+                        href={c.file.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-blue-600 underline"
+                      >
+                        {c.file.name}
+                      </a>
+                    ) : (
+                      "No File"
+                    )}
+                  </td>
+                  <td
+                    className={`p-2 border font-medium ${
+                      c.status === "open" ? "text-green-600" : "text-red-600"
+                    }`}
+                  >
+                    {c.status}
+                  </td>
                 </tr>
               ))}
             </tbody>

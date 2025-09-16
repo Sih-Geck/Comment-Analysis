@@ -86,9 +86,10 @@ export default function DeptHome() {
             <table className="w-full border-collapse text-sm">
               <thead>
                 <tr className="text-left border-b bg-gray-100">
-                  <th className="p-2 w-1/4">Deadline</th>
-                  <th className="p-2">Title</th>
-                  <th className="p-2">Status</th>
+                  <th className="p-2 w-1/6">Deadline</th>
+                  <th className="p-2 w-2/6">Title</th>
+                  <th className="p-2 w-1/6">File</th>
+                  <th className="p-2 w-0/6">Status</th>
                 </tr>
               </thead>
               <tbody>
@@ -99,7 +100,6 @@ export default function DeptHome() {
                   >
                     <td className="p-2 text-gray-600">{c.deadline}</td>
                     <td className="p-2">
-                      {/* ✅ Corrected route */}
                       <Link
                         to={`/department-dashboard/consultation/${c.id}`}
                         className="text-blue-600 hover:underline"
@@ -108,9 +108,23 @@ export default function DeptHome() {
                       </Link>
                     </td>
                     <td className="p-2">
+                      {c.file ? (
+                        <a
+                          href={c.file.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-blue-600 underline"
+                        >
+                          {c.file.name}
+                        </a>
+                      ) : (
+                        "No File"
+                      )}
+                    </td>
+                    <td className="p-2">
                       <span
                         className={`px-2 py-1 text-xs rounded ${
-                          c.status === "Open"
+                          c.status === "open"
                             ? "bg-green-100 text-green-700"
                             : "bg-red-100 text-red-700"
                         }`}
