@@ -113,11 +113,6 @@ export default function DepartmentDashboard() {
           </button>
         </div>
 
-        {/* Desktop Header */}
-        <div className="hidden md:flex justify-between items-center mb-6">
-          <h1 className="text-2xl font-bold">Welcome Department</h1>
-        </div>
-
         <Outlet />
       </main>
     </div>

@@ -11,7 +11,7 @@ const Home = () => {
           alt="Banner"
           className="w-full h-[200px] md:h-[400px] lg:h-[500px] object-cover"
         />
-        <div className="absolute inset-0 flex items-center justify-center text-white text-2xl md:text-3xl font-bold bg-black/30">
+        <div className="absolute inset-0 flex items-center justify-center text-white text-2xl md:text-3xl font-bold">
           {/* Agar banner ke upar koi heading dalni ho to yaha likho */}
         </div>
       </section>

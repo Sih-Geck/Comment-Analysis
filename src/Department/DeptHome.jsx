@@ -29,7 +29,7 @@ export default function DeptHome() {
 
   return (
     <div className="p-4 sm:p-6">
-      <h1 className="text-xl sm:text-2xl bg-blue-500 rounded-lg text-yellow-200 h-12 flex justify-center items-center font-bold mb-6">
+      <h1 className="text-xl sm:text-2xl bg-blue-500 rounded-lg text-white h-12 flex justify-center items-center font-bold mb-6">
         Welcome Department
       </h1>
 
