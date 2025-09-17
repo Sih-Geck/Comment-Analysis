@@ -1,23 +1,27 @@
+/* Root wrapper responsive */
 #root {
   max-width: 1280px;
   margin: 0 auto;
-  padding: 2rem;
+  padding: 1rem;
   text-align: center;
 }
 
+/* Responsive logo */
 .logo {
-  height: 6em;
-  padding: 1.5em;
+  height: 5em;
+  max-width: 100%;
+  padding: 1em;
   will-change: filter;
   transition: filter 300ms;
 }
 .logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
+  filter: drop-shadow(0 0 1.5em #646cffaa);
 }
 .logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+  filter: drop-shadow(0 0 1.5em #61dafbaa);
 }
 
+/* Logo animation */
 @keyframes logo-spin {
   from {
     transform: rotate(0deg);
@@ -33,10 +37,54 @@
   }
 }
 
+/* Card responsive */
 .card {
-  padding: 2em;
+  padding: 1.5em;
+  margin: 1rem auto;
+  border-radius: 0.5rem;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  background: #fff;
+  max-width: 90%;
 }
 
+/* Read docs text */
 .read-the-docs {
-  color: #888;
+  color: #666;
+  font-size: 0.9rem;
+}
+
+/* Responsive breakpoints */
+@media (max-width: 768px) {
+  #root {
+    padding: 1rem;
+  }
+
+  .logo {
+    height: 4em;
+    padding: 0.8em;
+  }
+
+  .card {
+    padding: 1em;
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  #root {
+    padding: 0.5rem;
+  }
+
+  .logo {
+    height: 3.5em;
+    padding: 0.5em;
+  }
+
+  .card {
+    padding: 0.8em;
+  }
+
+  .read-the-docs {
+    font-size: 0.8rem;
+  }
 }

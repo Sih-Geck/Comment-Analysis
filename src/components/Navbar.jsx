@@ -45,17 +45,17 @@ const Navbar = () => {
     { name: "My Workspace", path: "/admin" },
     { name: "My Application", path: "/admin" },
     { name: "MCA Services", path: "/admin" },
-    { name: "E-Consultation", path: "/E-Consultation"},
+    { name: "E-Consultation", path: "/E-Consultation" },
     { name: "Data & Reports", path: "/admin" },
     { name: "Help & FAQs", path: "/admin" },
     { name: "Contact Us", path: "/admin" },
   ];
 
   return (
-    <header className="bg-white shadow-md sticky top-0 z-50 ">
+    <header className="bg-white shadow-md sticky top-0 z-50">
       {/* Top Bar */}
-      <div className="bg-blue-950  text-white h-15 flex items-center">
-        <div className="container mx-auto px-5 py-1.5 flex justify-between items-center text-xs">
+      <div className="bg-blue-950 text-white">
+        <div className="container mx-auto px-4 py-1.5 flex justify-between items-center text-xs">
           <span> eConsultation Portal</span>
           <div className="hidden sm:flex items-center gap-4">
             <div className="flex items-center gap-2">
@@ -71,6 +71,7 @@ const Navbar = () => {
               </button>
             </div>
             <div className="h-4 w-px bg-gray-500"></div>
+            {/* Sign In / Sign Up (Desktop Only) */}
             <Link
               to="/login"
               className="flex items-center gap-1.5 hover:underline"
@@ -83,37 +84,45 @@ const Navbar = () => {
       </div>
 
       {/* Main Header */}
-      <div className="bg-white py-4 px-4 shadow-sm h-30 flex items-center">
-        <div className="container mx-auto flex flex-col md:flex-row items-center justify-baseline gap-4">
-          <Link to="/" className="flex items-center gap-1">
-            <img src={Asset} alt="Emblem" className="h-22 w-auto ml-20" />
-          </Link>
-          <div className="hidden md:block h-17 w-0.5 bg-gray-300 ml-15"></div>
-          <div className="flex flex-col items-center md:items-start text-center md:text-left">
-            <p className="text-sm font-semibold text-gray-600">
-              EMPOWERING BUSINESS, PROTECTING INVESTORS
-            </p>
-            <div>
-              <span className="text-sm font-bold text-orange-500">
-                REGULATOR
-              </span>
-              <span className="text-gray-400 mx-1">•</span>
-              <span className="text-sm font-bold text-green-500">
-                INTEGRATOR
-              </span>
-              <span className="text-gray-400 mx-1">•</span>
-              <span className="text-sm font-bold text-red-500">
-                FACILITATOR
-              </span>
-              <span className="text-gray-400 mx-1">•</span>
-              <span className="text-sm font-bold text-blue-500">EDUCATOR</span>
+      <div className="bg-white py-4 px-4 shadow-sm">
+        <div className="container mx-auto flex flex-col md:flex-row items-center md:justify-between gap-4">
+          {/* Logo + Divider + Tagline */}
+          <div className="flex flex-col md:flex-row items-center gap-4 w-full md:w-auto">
+            {/* Logo */}
+            <Link to="/" className="flex items-center">
+              <img
+                src={Asset}
+                alt="Emblem"
+                className="h-16 w-auto md:h-20 lg:h-22"
+              />
+            </Link>
+
+            {/* Divider (desktop only) */}
+            <div className="h-12 w-px bg-gray-300 hidden md:block"></div>
+
+            {/* Tagline */}
+            <div className="flex flex-col text-center md:text-left">
+              <p className="text-xs md:text-sm font-semibold text-gray-600">
+                EMPOWERING BUSINESS, PROTECTING INVESTORS
+              </p>
+              <div className="text-xs md:text-sm">
+                <span className="font-bold text-orange-500">REGULATOR</span>
+                <span className="text-gray-400 mx-1">•</span>
+                <span className="font-bold text-green-500">INTEGRATOR</span>
+                <span className="text-gray-400 mx-1">•</span>
+                <span className="font-bold text-red-500">FACILITATOR</span>
+                <span className="text-gray-400 mx-1">•</span>
+                <span className="font-bold text-blue-500">EDUCATOR</span>
+              </div>
             </div>
           </div>
-          <div className="relative w-full md:w-auto ml-70">
+
+          {/* Search Bar */}
+          <div className="relative w-full md:w-72 lg:w-96">
             <input
               type="search"
               placeholder="Search"
-              className="bg-gray-100 rounded-full py-2 pl-4 pr-10 w-full md:w-130 border-2 border-transparent focus:border-brand-blue-500 focus:outline-none transition"
+              className="bg-gray-100 rounded-full py-2 pl-4 pr-10 w-full border-2 border-transparent focus:border-blue-500 focus:outline-none transition"
             />
             <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
               <SearchIcon />
@@ -127,34 +136,21 @@ const Navbar = () => {
         <div className="container mx-auto px-4 flex justify-between items-center h-12">
           {/* Desktop Nav */}
           <div className="hidden md:flex items-center h-full flex-1">
-            <ul className="flex space-x-2 w-full">
+            <ul className="flex flex-wrap gap-1 w-full justify-center">
               {navLinks.map((link) => (
-                <li key={link.name} className="flex-1 text-center">
-                  {link.external ? (
-                    <a
-                      href={link.path}
-                      
-                      rel="noopener noreferrer"
-                      className="w-full text-center text-white h-full flex items-center justify-center text-sm font-medium transition-colors hover:bg-brand-blue-800"
-                    >
-                      {link.name}
-                    </a>
-                  ) : (
-                   <NavLink
-  to={link.path}
-  className={({ isActive }) =>
-    `relative w-auto px-3 py-2 text-sm font-medium transition-all 
-     ${isActive 
-       ? "bg-blue-800 text-white rounded-md" 
-       : "text-white hover:bg-blue-700 hover:rounded-md"}`
-  }
->
-  {link.name}
-</NavLink>
-
-
-
-                  )}
+                <li key={link.name}>
+                  <NavLink
+                    to={link.path}
+                    className={({ isActive }) =>
+                      `relative px-3 py-2 text-sm font-medium transition-all ${
+                        isActive
+                          ? "bg-blue-800 text-white rounded-md"
+                          : "text-white hover:bg-blue-700 hover:rounded-md"
+                      }`
+                    }
+                  >
+                    {link.name}
+                  </NavLink>
                 </li>
               ))}
             </ul>
@@ -165,7 +161,7 @@ const Navbar = () => {
             <button
               onClick={() => setIsOpen(!isOpen)}
               type="button"
-              className="inline-flex items-center justify-center p-2 rounded-md text-gray-300 hover:text-white hover:bg-brand-blue-800 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white"
+              className="inline-flex items-center justify-center p-2 rounded-md text-gray-300 hover:text-white hover:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white"
             >
               <svg
                 className="block h-6 w-6"
@@ -179,7 +175,9 @@ const Navbar = () => {
                   strokeLinejoin="round"
                   strokeWidth="2"
                   d={
-                    !isOpen ? "M4 6h16M4 12h16M4 18h16" : "M6 18L18 6M6 6l12 12"
+                    !isOpen
+                      ? "M4 6h16M4 12h16M4 18h16"
+                      : "M6 18L18 6M6 6l12 12"
                   }
                 />
               </svg>
@@ -194,27 +192,33 @@ const Navbar = () => {
               <ul>
                 {navLinks.map((link) => (
                   <li key={link.name}>
-                    {link.external ? (
-                      <a
-                        href={link.path}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="block px-3 py-2 rounded-md text-white hover:bg-brand-blue-800"
-                      >
-                        {link.name}
-                      </a>
-                    ) : (
-                      <NavLink
-                        to={link.path}
-                        onClick={() => setIsOpen(false)}
-                        className="block px-3 py-2 rounded-md text-white hover:bg-brand-blue-800"
-                      >
-                        {link.name}
-                      </NavLink>
-                    )}
+                    <NavLink
+                      to={link.path}
+                      onClick={() => setIsOpen(false)}
+                      className="block px-3 py-2 rounded-md text-white hover:bg-blue-800"
+                    >
+                      {link.name}
+                    </NavLink>
                   </li>
                 ))}
               </ul>
+              {/* Sign In / Sign Up (Mobile Only) */}
+              <div className="mt-4 border-t border-gray-600 pt-3">
+                <Link
+                  to="/login"
+                  onClick={() => setIsOpen(false)}
+                  className="block w-full text-center bg-blue-800 text-white py-2 rounded-md mb-2"
+                >
+                  Sign In
+                </Link>
+                <Link
+                  to="/signup"
+                  onClick={() => setIsOpen(false)}
+                  className="block w-full text-center border border-white text-white py-2 rounded-md"
+                >
+                  Sign Up
+                </Link>
+              </div>
             </div>
           </div>
         )}

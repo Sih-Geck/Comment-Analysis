@@ -18,9 +18,13 @@ import DeptConsultationDetails from "./Department/DeptConsultationDetails";
 import { ConsultationProvider } from "./context/ConsultationContext";
 
 function App() {
+  // ✅ base path local vs deploy ke liye
+  const basename =
+    import.meta.env.MODE === "development" ? "/" : "/Comment-Analysis";
+
   return (
     <ConsultationProvider>
-      <BrowserRouter basename="/Comment-Analysis">
+      <BrowserRouter basename={basename}>
         <Routes>
           {/* ✅ Public Layout */}
           <Route path="/" element={<Layout />}>

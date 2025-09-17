@@ -28,13 +28,13 @@ export default function DeptHome() {
   const totalPages = Math.ceil(consultations.length / itemsPerPage);
 
   return (
-    <div className="p-6">
-      <h1 className="text-2xl bg-blue-500 rounded-lg text-yellow-200 h-15 flex justify-center items-center font-bold mb-6">
+    <div className="p-4 sm:p-6">
+      <h1 className="text-xl sm:text-2xl bg-blue-500 rounded-lg text-yellow-200 h-12 flex justify-center items-center font-bold mb-6">
         Welcome Department
       </h1>
 
       {/* Stats Section */}
-      <div className="grid grid-cols-2 md:grid-cols-3 gap-6 mb-10">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mb-10">
         {stats ? (
           <>
             <div className="bg-blue-200 p-4 rounded-lg text-center shadow">
@@ -57,12 +57,16 @@ export default function DeptHome() {
 
       {/* Recent Consultations */}
       <div className="bg-white shadow rounded-lg p-4">
-        <div className="flex justify-between items-center mb-4">
-          <h2 className="text-xl font-semibold">Recent Consultations</h2>
+        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-4 gap-3">
+          <h2 className="text-lg sm:text-xl font-semibold">
+            Recent Consultations
+          </h2>
 
           {/* Rows per page selector */}
           <div className="flex items-center space-x-2">
-            <label htmlFor="rows" className="text-sm">Rows per page:</label>
+            <label htmlFor="rows" className="text-sm">
+              Rows:
+            </label>
             <select
               id="rows"
               value={itemsPerPage}
@@ -83,62 +87,107 @@ export default function DeptHome() {
 
         {currentItems.length > 0 ? (
           <>
-            <table className="w-full border-collapse text-sm">
-              <thead>
-                <tr className="text-left border-b bg-gray-100">
-                  <th className="p-2 w-1/6">Deadline</th>
-                  <th className="p-2 w-2/6">Title</th>
-                  <th className="p-2 w-1/6">File</th>
-                  <th className="p-2 w-0/6">Status</th>
-                </tr>
-              </thead>
-              <tbody>
-                {currentItems.map((c) => (
-                  <tr
-                    key={c.id}
-                    className="border-b hover:bg-gray-50 transition cursor-pointer"
-                  >
-                    <td className="p-2 text-gray-600">{c.deadline}</td>
-                    <td className="p-2">
-                      <Link
-                        to={`/department-dashboard/consultation/${c.id}`}
-                        className="text-blue-600 hover:underline"
-                      >
-                        {c.title}
-                      </Link>
-                    </td>
-                    <td className="p-2">
-                      {c.file ? (
-                        <a
-                          href={c.file.url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-blue-600 underline"
-                        >
-                          {c.file.name}
-                        </a>
-                      ) : (
-                        "No File"
-                      )}
-                    </td>
-                    <td className="p-2">
-                      <span
-                        className={`px-2 py-1 text-xs rounded ${
-                          c.status === "open"
-                            ? "bg-green-100 text-green-700"
-                            : "bg-red-100 text-red-700"
-                        }`}
-                      >
-                        {c.status}
-                      </span>
-                    </td>
+            {/* Desktop Table */}
+            <div className="hidden sm:block overflow-x-auto">
+              <table className="w-full border-collapse text-sm">
+                <thead>
+                  <tr className="text-left border-b bg-gray-100">
+                    <th className="p-2 w-1/6">Deadline</th>
+                    <th className="p-2 w-2/6">Title</th>
+                    <th className="p-2 w-1/6">File</th>
+                    <th className="p-2 w-1/6">Status</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  {currentItems.map((c) => (
+                    <tr
+                      key={c.id}
+                      className="border-b hover:bg-gray-50 transition"
+                    >
+                      <td className="p-2 text-gray-600">{c.deadline}</td>
+                      <td className="p-2">
+                        <Link
+                          to={`/department-dashboard/consultation/${c.id}`}
+                          className="text-blue-600 hover:underline"
+                        >
+                          {c.title}
+                        </Link>
+                      </td>
+                      <td className="p-2">
+                        {c.file ? (
+                          <a
+                            href={c.file.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-blue-600 underline"
+                          >
+                            {c.file.name}
+                          </a>
+                        ) : (
+                          "No File"
+                        )}
+                      </td>
+                      <td className="p-2">
+                        <span
+                          className={`px-2 py-1 text-xs rounded ${
+                            c.status === "open"
+                              ? "bg-green-100 text-green-700"
+                              : "bg-red-100 text-red-700"
+                          }`}
+                        >
+                          {c.status}
+                        </span>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+
+            {/* Mobile Cards */}
+            <div className="sm:hidden space-y-4">
+              {currentItems.map((c) => (
+                <div
+                  key={c.id}
+                  className="border rounded-lg p-4 shadow hover:shadow-md transition"
+                >
+                  <div className="flex justify-between items-center mb-2">
+                    <span className="text-xs text-gray-500">{c.deadline}</span>
+                    <span
+                      className={`px-2 py-1 text-xs rounded ${
+                        c.status === "open"
+                          ? "bg-green-100 text-green-700"
+                          : "bg-red-100 text-red-700"
+                      }`}
+                    >
+                      {c.status}
+                    </span>
+                  </div>
+                  <h3 className="font-semibold text-blue-600 mb-2">
+                    <Link to={`/department-dashboard/consultation/${c.id}`}>
+                      {c.title}
+                    </Link>
+                  </h3>
+                  <p className="text-sm">
+                    {c.file ? (
+                      <a
+                        href={c.file.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-blue-600 underline"
+                      >
+                        {c.file.name}
+                      </a>
+                    ) : (
+                      "No File Attached"
+                    )}
+                  </p>
+                </div>
+              ))}
+            </div>
 
             {/* Pagination Controls */}
-            <div className="flex justify-center items-center mt-4 space-x-2">
+            <div className="flex flex-wrap justify-center items-center mt-4 gap-2">
               <button
                 onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
                 disabled={currentPage === 1}
@@ -152,7 +201,9 @@ export default function DeptHome() {
                   key={i + 1}
                   onClick={() => setCurrentPage(i + 1)}
                   className={`px-3 py-1 border rounded ${
-                    currentPage === i + 1 ? "bg-blue-500 text-white" : "bg-white"
+                    currentPage === i + 1
+                      ? "bg-blue-500 text-white"
+                      : "bg-white"
                   }`}
                 >
                   {i + 1}

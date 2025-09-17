@@ -13,12 +13,7 @@ export default function DeptConsultationDetails() {
   const [loading, setLoading] = useState(true);
 
   // ✅ AI Analysis States
-  const [keywords, setKeywords] = useState([
-    "Regulations",
-    "YouTube",
-    "Tourism",
-    "Culture",
-  ]);
+  const [keywords] = useState(["Regulations", "YouTube", "Tourism", "Culture"]);
   const [summary, setSummary] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -43,23 +38,22 @@ export default function DeptConsultationDetails() {
   }, [id]);
 
   // ✅ AI Summarize function
-  const handleSummarize = async () => {
-    // TODO: Replace with backend API call
+  const handleSummarize = () => {
     const fakeSummary =
-      "Most comments emphasize stricter regulations for digital content and promoting cultural tourism .";
+      "Most comments emphasize stricter regulations for digital content and promoting cultural tourism.";
     setSummary(fakeSummary);
-    setIsModalOpen(true); // Modal open
+    setIsModalOpen(true);
   };
 
   if (!consultation) {
     return (
-      <div className="p-6">
-        <h2 className="text-xl font-semibold text-red-600">
+      <div className="p-6 text-center">
+        <h2 className="text-xl font-semibold text-red-600 mb-4">
           Consultation not found
         </h2>
         <button
           onClick={() => navigate(-1)}
-          className="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+          className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
         >
           Go Back
         </button>
@@ -68,15 +62,16 @@ export default function DeptConsultationDetails() {
   }
 
   return (
-    <div>
-      <div className="p-6 bg-white rounded-lg shadow">
+    <div className="p-4 md:p-6 space-y-6">
+      {/* Main Card */}
+      <div className="p-4 md:p-6 bg-white rounded-lg shadow">
         {/* Title & Status */}
-        <div className="flex justify-between items-center mb-4">
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-4 gap-2">
           <h1 className="text-2xl font-bold text-gray-800">
             {consultation.title}
           </h1>
           <span
-            className={`px-3 py-1 text-sm rounded ${
+            className={`px-3 py-1 text-sm rounded-full ${
               consultation.status?.toLowerCase() === "open"
                 ? "bg-green-100 text-green-700"
                 : "bg-red-100 text-red-700"
@@ -99,7 +94,7 @@ export default function DeptConsultationDetails() {
           </p>
         </div>
 
-        {/* ✅ PDF Attachment (Updated with button) */}
+        {/* PDF Attachment */}
         {consultation.file && (
           <div className="mb-6">
             <h2 className="text-lg font-semibold mb-2">Attached Document</h2>
@@ -113,18 +108,18 @@ export default function DeptConsultationDetails() {
         )}
 
         {/* Action Buttons */}
-        <div className="flex space-x-4 mb-8">
-          <button className="px-4 py-2 bg-yellow-500 text-white rounded hover:bg-yellow-600">
+        <div className="flex flex-col md:flex-row gap-3 mb-4">
+          <button className="px-4 py-2 bg-yellow-500 text-white rounded hover:bg-yellow-600 w-full md:w-auto">
             Edit Consultation
           </button>
-          <button className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600">
+          <button className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 w-full md:w-auto">
             Close Consultation
           </button>
         </div>
       </div>
 
-      {/* ✅ Keywords Box */}
-      <div className="bg-white mt-8 rounded-lg shadow p-6">
+      {/* Keywords */}
+      <div className="bg-white rounded-lg shadow p-4 md:p-6">
         <h2 className="text-xl font-bold text-gray-800 mb-4">Keywords</h2>
         <div className="flex flex-wrap gap-2">
           {keywords.map((kw, idx) => (
@@ -138,8 +133,8 @@ export default function DeptConsultationDetails() {
         </div>
       </div>
 
-      {/* ✅ AI Summarize Box */}
-      <div className="bg-white mt-6 rounded-lg shadow p-6">
+      {/* AI Summarize */}
+      <div className="bg-white rounded-lg shadow p-4 md:p-6">
         <h2 className="text-xl font-bold text-gray-800 mb-4">AI Summarize</h2>
         <p className="text-gray-500 mb-4">
           Click the button below to generate AI summary of comments.
@@ -152,14 +147,14 @@ export default function DeptConsultationDetails() {
         </button>
       </div>
 
-      {/* ✅ Modal for AI Summary */}
+      {/* AI Summary Modal */}
       {isModalOpen && (
-        <div className="fixed inset-0 bg-transparent backdrop-brightness-75 backdrop-blur-sm flex items-center justify-center z-50">
-          <div className="bg-white w-200 rounded-lg shadow-lg p-6 relative">
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+          <div className="bg-white w-11/12 md:w-1/2 rounded-lg shadow-lg p-6 relative animate-fadeIn">
             <h2 className="text-xl font-bold text-gray-800 mb-4">
               AI Generated Summary
             </h2>
-            <p className="text-gray-700 mb-6 ">{summary}</p>
+            <p className="text-gray-700 mb-6">{summary}</p>
             <button
               onClick={() => setIsModalOpen(false)}
               className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
@@ -170,22 +165,19 @@ export default function DeptConsultationDetails() {
         </div>
       )}
 
-      {/* Comments Section */}
-      <div className="bg-white mt-8 rounded-lg shadow">
-        <h2 className="text-xl font-bold text-gray-800 p-4 mb-4">Comments</h2>
-
+      {/* Comments */}
+      <div className="bg-white rounded-lg shadow p-4 md:p-6">
+        <h2 className="text-xl font-bold text-gray-800 mb-4">Comments</h2>
         {loading ? (
           <p className="text-gray-500">Loading comments...</p>
         ) : comments.length === 0 ? (
-          <p className="text-gray-500">
-            No comments yet. Be the first to comment!
-          </p>
+          <p className="text-gray-500">No comments yet. Be the first to comment!</p>
         ) : (
-          <div className="space-y-6 p-4">
+          <div className="space-y-4">
             {comments.map((comment) => (
               <div
                 key={comment.id}
-                className="border-0 rounded-lg bg-gray-100 p-4 shadow-sm"
+                className="rounded-lg bg-gray-50 p-4 border border-gray-200"
               >
                 <div className="flex items-center mb-2">
                   <div className="w-10 h-10 rounded-full bg-gray-300 flex-shrink-0"></div>

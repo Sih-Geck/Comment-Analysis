@@ -8,12 +8,13 @@ export default function Reports() {
         Generate and view reports for department activities.
       </p>
 
-      <div className="grid grid-cols-2 gap-4">
-        <div className="p-4 border rounded shadow hover:bg-gray-50 cursor-pointer">
-          📊 User Activity Report
+      {/* Responsive Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="p-4 border rounded-lg shadow hover:shadow-md hover:bg-gray-50 cursor-pointer transition">
+          📊 <span className="font-medium">User Activity Report</span>
         </div>
-        <div className="p-4 border rounded shadow hover:bg-gray-50 cursor-pointer">
-          📑 Consultation Summary
+        <div className="p-4 border rounded-lg shadow hover:shadow-md hover:bg-gray-50 cursor-pointer transition">
+          📑 <span className="font-medium">Consultation Summary</span>
         </div>
       </div>
     </div>
