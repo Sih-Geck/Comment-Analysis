@@ -13,6 +13,7 @@ export default function EConsultation() {
     state: "",
     city: "",
     comment: "",
+    pdfFiles: [], // ✅ multiple files ke liye
   });
 
   const handleOpenModal = (consultation) => {
@@ -30,6 +31,7 @@ export default function EConsultation() {
       state: "",
       city: "",
       comment: "",
+      pdfFiles: [],
     });
   };
 
@@ -38,6 +40,21 @@ export default function EConsultation() {
       ...formData,
       [e.target.name]: e.target.value,
     });
+  };
+
+  // ✅ multiple file selection
+  const handleFileChange = (e) => {
+    setFormData({
+      ...formData,
+      pdfFiles: [...formData.pdfFiles, ...Array.from(e.target.files)],
+    });
+  };
+
+  // ✅ remove single file
+  const handleRemoveFile = (index) => {
+    const updatedFiles = [...formData.pdfFiles];
+    updatedFiles.splice(index, 1);
+    setFormData({ ...formData, pdfFiles: updatedFiles });
   };
 
   const handleSubmit = async (e) => {
@@ -207,6 +224,41 @@ export default function EConsultation() {
                   required
                   className="border border-gray-300 px-3 py-2 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none h-28 resize-none"
                 />
+              </label>
+
+              {/* ✅ PDF Upload */}
+              <label className="flex flex-col text-sm">
+                <span className="font-medium mb-1">Upload PDFs (optional)</span>
+                <input
+                  type="file"
+                  accept="application/pdf"
+                  multiple
+                  onChange={handleFileChange}
+                  className="border border-gray-300 px-3 py-2 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+                />
+
+                {formData.pdfFiles.length > 0 && (
+                  <div className="mt-3 space-y-2">
+                    {formData.pdfFiles.map((file, index) => (
+                      <div
+                        key={index}
+                        className="flex items-center justify-between bg-gray-100 px-3 py-2 rounded"
+                      >
+                        <span className="text-green-700 text-sm">
+                          {file.name}
+                        </span>
+                        <button
+                          type="button"
+                          onClick={() => handleRemoveFile(index)}
+                          className="text-red-500 hover:text-red-700 font-bold"
+                          title="Remove file"
+                        >
+                          ✕
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                )}
               </label>
 
               <div className="flex flex-col sm:flex-row justify-end gap-3 mt-6">

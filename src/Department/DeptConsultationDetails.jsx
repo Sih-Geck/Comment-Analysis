@@ -5,44 +5,135 @@ import { ConsultationContext } from "../context/ConsultationContext";
 export default function DeptConsultationDetails() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { consultations } = useContext(ConsultationContext);
+  const {
+    consultations,
+    fetchComments,
+    analyzeComments,
+    summarizeComments,
+  } = useContext(ConsultationContext);
 
-  const consultation = consultations.find((c) => c.id === parseInt(id));
+  const consultation = consultations.find((c) => String(c.id) === String(id));
 
-  const [comments, setComments] = useState([]);
-  const [loading, setLoading] = useState(true);
-
-  // ✅ AI Analysis States
-  const [keywords] = useState(["Regulations", "YouTube", "Tourism", "Culture"]);
+  const [expandedComments, setExpandedComments] = useState({});
+  const [loadingComments, setLoadingComments] = useState(false);
+  const [keywords, setKeywords] = useState([]);
   const [summary, setSummary] = useState("");
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [loadingKeywords, setLoadingKeywords] = useState(false);
+  const [loadingSummary, setLoadingSummary] = useState(false);
+  const [localComments, setLocalComments] = useState([]); // fallback safe
+  const [selectedComments, setSelectedComments] = useState([]); // ✅ selected comment IDs
 
-  // 🔥 Dummy comments for now
+  const API_BASE = "http://localhost:5000/api"; // same as backend
+
+  // ✅ Fetch Comments (with dummy fallback)
   useEffect(() => {
-    const dummy = [
-      {
-        id: 1,
-        author: "Vijaya Krishna S",
-        time: "8 minutes ago",
-        text: "There should be formulation of strict Rules and Regulations for YouTube contents...",
-      },
-      {
-        id: 2,
-        author: "Sindhu Manoj",
-        time: "24 minutes ago",
-        text: "We should promote Film Tourism. It will help in the promotion of culture and destinations of India...",
-      },
-    ];
-    setComments(dummy);
-    setLoading(false);
-  }, [id]);
+    if (!consultation) return;
 
-  // ✅ AI Summarize function
-  const handleSummarize = () => {
-    const fakeSummary =
-      "Most comments emphasize stricter regulations for digital content and promoting cultural tourism.";
-    setSummary(fakeSummary);
-    setIsModalOpen(true);
+    const loadComments = async () => {
+      setLoadingComments(true);
+      try {
+        await fetchComments(consultation.id);
+        setLocalComments(consultation.comments || []);
+      } catch (error) {
+        console.error("Backend not ready, using dummy comments.");
+        setLocalComments([
+          {
+            id: 101,
+            author: "Sample User",
+            time: "2 mins ago",
+            text: "This is a dummy comment. Backend will replace this.",
+            files: [],
+            sentiment: "Positive",
+          },
+          {
+            id: 102,
+            author: "Guest",
+            time: "5 mins ago",
+            text: "Another fallback comment for testing UI only.",
+            files: [],
+            sentiment: "Neutral",
+          },
+        ]);
+      } finally {
+        setLoadingComments(false);
+      }
+    };
+
+    loadComments();
+  }, [consultation]);
+
+  // ✅ Auto-fetch Keywords (with dummy fallback)
+  useEffect(() => {
+    if (!consultation) return;
+    const loadKeywords = async () => {
+      setLoadingKeywords(true);
+      try {
+        await analyzeComments(consultation.id);
+        setKeywords(consultation.keywords || []);
+      } catch (err) {
+        console.error("Keyword analysis failed", err);
+        setKeywords(["Regulations", "YouTube", "Tourism", "Culture"]);
+      } finally {
+        setLoadingKeywords(false);
+      }
+    };
+    loadKeywords();
+  }, [consultation]);
+
+  // ✅ Summarize Comments with selection or all
+  const handleSummarize = async () => {
+    if (!consultation) return;
+
+    setLoadingSummary(true);
+    try {
+      // If no comment selected → summarize all comments
+      const commentsToSummarize =
+        selectedComments.length > 0
+          ? localComments.filter((c) => selectedComments.includes(c.id))
+          : localComments;
+
+      // Include attached file URLs in the text
+      const preparedComments = commentsToSummarize.map((c) => ({
+        ...c,
+        text:
+          c.text +
+          (c.files?.length ? " " + c.files.map((f) => f.url).join(" ") : ""),
+      }));
+
+      const res = await fetch(
+        `${API_BASE}/consultations/${consultation.id}/summarize`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ comments: preparedComments }),
+        }
+      );
+
+      const data = await res.json();
+      setSummary(data.summary || "AI summary not available.");
+    } catch (err) {
+      console.error("Summarization failed", err);
+      setSummary(
+        "AI summary (dummy): Selected or all comments summarized."
+      );
+    } finally {
+      setLoadingSummary(false);
+    }
+  };
+
+  const toggleExpand = (commentId) => {
+    setExpandedComments((prev) => ({
+      ...prev,
+      [commentId]: !prev[commentId],
+    }));
+  };
+
+  const toggleSelect = (commentId) => {
+    setSelectedComments((prev) =>
+      prev.includes(commentId)
+        ? prev.filter((id) => id !== commentId)
+        : [...prev, commentId]
+    );
   };
 
   if (!consultation) {
@@ -63,9 +154,8 @@ export default function DeptConsultationDetails() {
 
   return (
     <div className="p-4 md:p-6 space-y-6">
-      {/* Main Card */}
+      {/* 🔹 Consultation Main Card */}
       <div className="p-4 md:p-6 bg-white rounded-lg shadow">
-        {/* Title & Status */}
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-4 gap-2">
           <h1 className="text-2xl font-bold text-gray-800">
             {consultation.title}
@@ -77,16 +167,14 @@ export default function DeptConsultationDetails() {
                 : "bg-red-100 text-red-700"
             }`}
           >
-            {consultation.status}
+            {consultation.status || "Unknown"}
           </span>
         </div>
 
-        {/* Deadline */}
         <p className="text-gray-600 mb-2">
-          <strong>Deadline:</strong> {consultation.deadline}
+          <strong>Deadline:</strong> {consultation.deadline || "—"}
         </p>
 
-        {/* Description */}
         <div className="mb-6">
           <h2 className="text-lg font-semibold mb-2">Description</h2>
           <p className="text-gray-700">
@@ -94,7 +182,6 @@ export default function DeptConsultationDetails() {
           </p>
         </div>
 
-        {/* PDF Attachment */}
         {consultation.file && (
           <div className="mb-6">
             <h2 className="text-lg font-semibold mb-2">Attached Document</h2>
@@ -106,92 +193,159 @@ export default function DeptConsultationDetails() {
             </button>
           </div>
         )}
-
-        {/* Action Buttons */}
-        <div className="flex flex-col md:flex-row gap-3 mb-4">
-          <button className="px-4 py-2 bg-yellow-500 text-white rounded hover:bg-yellow-600 w-full md:w-auto">
-            Edit Consultation
-          </button>
-          <button className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 w-full md:w-auto">
-            Close Consultation
-          </button>
-        </div>
       </div>
 
-      {/* Keywords */}
+      {/* 🔹 Keywords */}
       <div className="bg-white rounded-lg shadow p-4 md:p-6">
         <h2 className="text-xl font-bold text-gray-800 mb-4">Keywords</h2>
-        <div className="flex flex-wrap gap-2">
-          {keywords.map((kw, idx) => (
-            <span
-              key={idx}
-              className="px-3 py-1 bg-blue-100 text-blue-800 text-sm rounded-full"
-            >
-              {kw}
-            </span>
-          ))}
-        </div>
-      </div>
-
-      {/* AI Summarize */}
-      <div className="bg-white rounded-lg shadow p-4 md:p-6">
-        <h2 className="text-xl font-bold text-gray-800 mb-4">AI Summarize</h2>
-        <p className="text-gray-500 mb-4">
-          Click the button below to generate AI summary of comments.
-        </p>
-        <button
-          onClick={handleSummarize}
-          className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
-        >
-          Run AI Summarize
-        </button>
-      </div>
-
-      {/* AI Summary Modal */}
-      {isModalOpen && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-          <div className="bg-white w-11/12 md:w-1/2 rounded-lg shadow-lg p-6 relative animate-fadeIn">
-            <h2 className="text-xl font-bold text-gray-800 mb-4">
-              AI Generated Summary
-            </h2>
-            <p className="text-gray-700 mb-6">{summary}</p>
-            <button
-              onClick={() => setIsModalOpen(false)}
-              className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
-            >
-              Close
-            </button>
-          </div>
-        </div>
-      )}
-
-      {/* Comments */}
-      <div className="bg-white rounded-lg shadow p-4 md:p-6">
-        <h2 className="text-xl font-bold text-gray-800 mb-4">Comments</h2>
-        {loading ? (
-          <p className="text-gray-500">Loading comments...</p>
-        ) : comments.length === 0 ? (
-          <p className="text-gray-500">No comments yet. Be the first to comment!</p>
-        ) : (
-          <div className="space-y-4">
-            {comments.map((comment) => (
-              <div
-                key={comment.id}
-                className="rounded-lg bg-gray-50 p-4 border border-gray-200"
+        {loadingKeywords ? (
+          <p className="text-gray-500">Analyzing comments...</p>
+        ) : keywords.length > 0 ? (
+          <div className="flex flex-wrap gap-2">
+            {keywords.map((kw, idx) => (
+              <span
+                key={idx}
+                className="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-sm font-medium"
               >
-                <div className="flex items-center mb-2">
-                  <div className="w-10 h-10 rounded-full bg-gray-300 flex-shrink-0"></div>
-                  <div className="ml-3">
-                    <p className="font-semibold text-gray-800">
-                      {comment.author}
-                    </p>
-                    <p className="text-xs text-gray-500">{comment.time}</p>
-                  </div>
-                </div>
-                <p className="text-gray-700">{comment.text}</p>
-              </div>
+                {kw}
+              </span>
             ))}
           </div>
+        ) : (
+          <p>No keywords available.</p>
+        )}
+      </div>
+
+      {/* 🔹 AI Summarize */}
+      <div className="bg-white rounded-lg shadow p-4 md:p-6">
+        <h2 className="text-xl font-bold text-gray-800 mb-4">AI Summarize</h2>
+        {!summary ? (
+          <>
+            <p className="text-gray-600 mb-3">
+              Select comments (optional) and click the button below to
+              generate AI summary.
+            </p>
+            <button
+              onClick={handleSummarize}
+              className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
+              disabled={loadingSummary}
+            >
+              {loadingSummary ? "Summarizing..." : "Run AI Summarize"}
+            </button>
+          </>
+        ) : (
+          <p className="text-gray-700 whitespace-pre-wrap">{summary}</p>
+        )}
+      </div>
+
+      {/* 🔹 Comments */}
+      <div className="bg-white rounded-lg shadow p-4 md:p-6">
+        <h2 className="text-xl font-bold text-gray-800 mb-4">Comments</h2>
+
+        {loadingComments && (
+          <p className="text-blue-500 text-sm mb-3">Loading comments...</p>
+        )}
+
+        {Array.isArray(localComments) && localComments.length > 0 ? (
+          <div className="space-y-4">
+            {localComments.map((comment) => {
+              const isExpanded = expandedComments[comment.id] || false;
+              const isLong = comment.text?.length > 200;
+              const displayText = isExpanded
+                ? comment.text
+                : comment.text?.slice(0, 200);
+              const isSelected = selectedComments.includes(comment.id);
+
+              return (
+                <div
+                  key={comment.id}
+                  className={`rounded-lg p-4 border flex flex-col md:flex-row justify-between gap-4 ${
+                    isSelected ? "border-blue-500 bg-blue-50" : "border-gray-200 bg-gray-50"
+                  }`}
+                >
+                  <div className="flex-1">
+                    <div className="flex items-center mb-2">
+                      <input
+                        type="checkbox"
+                        checked={isSelected}
+                        onChange={() => toggleSelect(comment.id)}
+                        className="mr-2"
+                      />
+                      <div className="w-10 h-10 rounded-full bg-gray-300 flex items-center justify-center font-bold text-gray-600">
+                        {comment.author ? comment.author[0] : "?"}
+                      </div>
+                      <div className="ml-3">
+                        <p className="font-semibold text-gray-800">
+                          {comment.author || "Anonymous"}
+                        </p>
+                        <p className="text-xs text-gray-500">
+                          {comment.time || "—"}
+                        </p>
+                      </div>
+                    </div>
+
+                    <p className="text-gray-700 whitespace-pre-wrap">
+                      {displayText}
+                      {!isExpanded && isLong && "..."}
+                    </p>
+
+                    {isLong && (
+                      <button
+                        onClick={() => toggleExpand(comment.id)}
+                        className="text-blue-600 text-sm mt-1 hover:underline"
+                      >
+                        {isExpanded ? "View Less" : "View More"}
+                      </button>
+                    )}
+
+                    {comment.files && comment.files.length > 0 && (
+                      <div className="mt-3">
+                        <h4 className="text-sm font-medium text-gray-700 mb-1">
+                          Attachments:
+                        </h4>
+                        {comment.files.map((file, idx) => (
+                          <div
+                            key={idx}
+                            className="flex items-center gap-2 mb-2"
+                          >
+                            <span className="text-sm text-gray-600">
+                              📄 {file.name}
+                            </span>
+                            <button
+                              onClick={() =>
+                                window.open(file.url || "#", "_blank")
+                              }
+                              className="px-3 py-1 bg-blue-500 text-white text-sm rounded hover:bg-blue-600"
+                            >
+                              View PDF
+                            </button>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="flex-shrink-0 flex items-start">
+                    <span
+                      className={`px-3 py-1 rounded-full text-sm font-medium ${
+                        comment.sentiment === "Positive"
+                          ? "bg-green-100 text-green-700"
+                          : comment.sentiment === "Negative"
+                          ? "bg-red-100 text-red-700"
+                          : "bg-yellow-100 text-yellow-700"
+                      }`}
+                    >
+                      {comment.sentiment || "Neutral"}
+                    </span>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        ) : (
+          <p className="text-gray-500">
+            No comments yet. Be the first to comment!
+          </p>
         )}
       </div>
     </div>
