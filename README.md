@@ -19,6 +19,17 @@ Word Cloud: Visually highlight the most frequently used keywords in stakeholder 
    ```bash
    git clone https://github.com/Sih-Geck/Comment-Analysis
 2.  ```bash
-    cd e-consultanation
+    cd Comment-Analysis
 3. ```bash
    npm install
+4. ```bash
+   npm run start
+5. ```bash
+   cd ../econsult-backend
+6. ```bash
+   npm install
+7. ```bash
+   npm run dev
+
+   
+         
